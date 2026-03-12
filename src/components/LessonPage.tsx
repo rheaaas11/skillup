@@ -120,7 +120,7 @@ export default function LessonPage({ lesson, onComplete, onBack }: LessonPagePro
               </div>
               1. Theory
             </h2>
-            <p className="text-text/70 leading-relaxed text-lg">{lesson[level].theory}</p>
+            <p className="text-text/70 leading-relaxed text-lg">{lesson[level]?.theory || "No theory available for this level."}</p>
           </div>
 
           <div className="bg-white rounded-[32px] p-8 lg:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-text/10">
@@ -130,8 +130,8 @@ export default function LessonPage({ lesson, onComplete, onBack }: LessonPagePro
               </div>
               2. Practice Task
             </h2>
-            <p className="text-text/70 leading-relaxed text-lg mb-4">{lesson[level].practiceTask}</p>
-            <p className="text-text/90 font-medium mb-10">Requirement: {lesson[level].uploadRequirements}</p>
+            <p className="text-text/70 leading-relaxed text-lg mb-4">{lesson[level]?.practiceTask || "No practice task available."}</p>
+            <p className="text-text/90 font-medium mb-10">Requirement: {lesson[level]?.uploadRequirements || "No requirements specified."}</p>
             
             {view === "content" ? (
               <button
