@@ -26,7 +26,7 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
   const [currentTime, setCurrentTime] = useState(0);
 
   const data = [
-    { name: "Score", value: result.score, fill: "var(--color-nav)" },
+    { name: "Score", value: result?.score || 0, fill: "var(--color-nav)" },
   ];
 
   const TABS: { id: TabType; label: string; icon: React.ReactNode }[] = [
@@ -175,13 +175,13 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                   </ResponsiveContainer>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-5xl font-serif text-text tracking-tighter">
-                      {result.score}
+                      {result?.score || 0}
                     </span>
                     <span className="text-[10px] font-medium text-text/40 uppercase tracking-widest mt-1">/ 100</span>
                   </div>
                 </div>
                 <p className="mt-6 text-text font-medium text-base italic">
-                  {result.score >= 80 ? "Excellent performance!" : result.score >= 60 ? "Good, but room for improvement." : "Needs practice."}
+                  {(result?.score || 0) >= 80 ? "Excellent performance!" : (result?.score || 0) >= 60 ? "Good, but room for improvement." : "Needs practice."}
                 </p>
               </motion.div>
             </div>
@@ -221,12 +221,12 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                         <CheckCircle className="w-6 h-6 text-success" /> Strengths
                       </h3>
                       <ul className="space-y-4">
-                        {result.strengths.map((str, i) => (
+                        {result?.strengths?.map((str, i) => (
                           <li key={i} className="flex items-start gap-4 text-text/70">
                             <div className="w-1.5 h-1.5 rounded-full bg-success mt-2.5 shrink-0" />
                             <span className="leading-relaxed">{str}</span>
                           </li>
-                        ))}
+                        )) || <li className="text-text/50 italic">No strengths identified yet.</li>}
                       </ul>
                     </div>
                     <div className="bg-bg rounded-[24px] p-8">
@@ -234,12 +234,12 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                         <XCircle className="w-6 h-6 text-accent" /> Areas to Improve
                       </h3>
                       <ul className="space-y-4">
-                        {result.weaknesses.map((wk, i) => (
+                        {result?.weaknesses?.map((wk, i) => (
                           <li key={i} className="flex items-start gap-4 text-text/70">
                             <div className="w-1.5 h-1.5 rounded-full bg-accent mt-2.5 shrink-0" />
                             <span className="leading-relaxed">{wk}</span>
                           </li>
-                        ))}
+                        )) || <li className="text-text/50 italic">No areas to improve identified yet.</li>}
                       </ul>
                     </div>
                   </div>
@@ -250,7 +250,7 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                       Improvement Plan
                     </h2>
                     <div className="space-y-8 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-px before:bg-text/10">
-                      {result.improvement_plan.map((step, i) => (
+                      {result?.improvement_plan?.map((step, i) => (
                         <div key={i} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                           <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-nav text-white font-serif italic text-lg shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
                             {i + 1}
@@ -259,7 +259,7 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                             <p className="text-text/70 leading-relaxed">{step}</p>
                           </div>
                         </div>
-                      ))}
+                      )) || <p className="text-text/50 italic text-center py-8">No improvement plan available.</p>}
                     </div>
                   </div>
                 </div>
@@ -335,7 +335,7 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                       </div>
                       <h2 className="text-3xl font-serif mb-6">Personalised Feedback</h2>
                       <p className="text-xl text-white/80 leading-relaxed font-serif italic">
-                        "{result.expert_feedback}"
+                        "{result?.expert_feedback || "No feedback available at this time."}"
                       </p>
                     </div>
                   </div>
@@ -355,12 +355,12 @@ export default function Results({ result, skill, videoUrl, onReset }: ResultsPro
                   </div>
                   
                   <div className="grid sm:grid-cols-2 gap-8">
-                    {result.skill_library?.map((item, i) => (
+                    {result?.skill_library?.map((item, i) => (
                       <div key={i} className="bg-bg rounded-[24px] p-8">
                         <h3 className="font-serif text-text mb-4 text-2xl">{item.title}</h3>
                         <p className="text-text/70 leading-relaxed">{item.content}</p>
                       </div>
-                    ))}
+                    )) || <p className="text-text/50 italic col-span-2 text-center py-8">No library content available.</p>}
                   </div>
                 </div>
               )}
