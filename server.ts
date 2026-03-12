@@ -75,21 +75,71 @@ Provide a detailed, structured, and helpful response. Use markdown formatting fo
     try {
       if (!apiKey) return res.status(500).json({ error: "Server API Key not configured" });
       const { skill } = req.body;
-      const prompt = `You are an expert AI Skills Coach. Create a detailed 5-lesson roadmap for a user who wants to learn: "${skill}".
-Each lesson must be very detailed, teaching the skill thoroughly.
-For each lesson, include:
-- id (string)
-- title (string)
-- description (string)
-- beginner: { theory: string, practiceTask: string, uploadRequirements: string }
-- intermediate: { theory: string, practiceTask: string, uploadRequirements: string }
-- advanced: { theory: string, practiceTask: string, uploadRequirements: string }
-- quiz: { question: string, options: string[], correctAnswer: number }[]
+      const prompt = `You are an expert AI Skills Coach. Create a comprehensive and highly detailed 5-lesson roadmap for a user who wants to learn: "${skill}".
+
+For EACH lesson and EACH level (beginner, intermediate, advanced):
+1. The "theory" section MUST be a thorough explanation (at least 200-300 words) covering the "why" and "how" of the specific topic.
+2. The "practiceTask" MUST be a clear, actionable exercise that the user can perform on camera.
+3. The "uploadRequirements" MUST specify exactly what the user needs to show in their video for the AI to analyze it effectively.
+
 Provide ONLY a valid JSON array. No markdown, no extra text.`;
       const result = await genAI.models.generateContent({
         model: "gemini-3-flash-preview",
         contents: [{ parts: [{ text: prompt }] }],
-        config: { responseMimeType: "application/json" }
+        config: { 
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "ARRAY",
+            items: {
+              type: "OBJECT",
+              properties: {
+                id: { type: "STRING" },
+                title: { type: "STRING" },
+                description: { type: "STRING" },
+                beginner: {
+                  type: "OBJECT",
+                  properties: {
+                    theory: { type: "STRING", description: "Detailed educational content (2-3 paragraphs)" },
+                    practiceTask: { type: "STRING", description: "Step-by-step exercise instructions" },
+                    uploadRequirements: { type: "STRING", description: "Specific visual cues for video analysis" }
+                  },
+                  required: ["theory", "practiceTask", "uploadRequirements"]
+                },
+                intermediate: {
+                  type: "OBJECT",
+                  properties: {
+                    theory: { type: "STRING", description: "Detailed educational content (2-3 paragraphs)" },
+                    practiceTask: { type: "STRING", description: "Step-by-step exercise instructions" },
+                    uploadRequirements: { type: "STRING", description: "Specific visual cues for video analysis" }
+                  },
+                  required: ["theory", "practiceTask", "uploadRequirements"]
+                },
+                advanced: {
+                  type: "OBJECT",
+                  properties: {
+                    theory: { type: "STRING", description: "Detailed educational content (2-3 paragraphs)" },
+                    practiceTask: { type: "STRING", description: "Step-by-step exercise instructions" },
+                    uploadRequirements: { type: "STRING", description: "Specific visual cues for video analysis" }
+                  },
+                  required: ["theory", "practiceTask", "uploadRequirements"]
+                },
+                quiz: {
+                  type: "ARRAY",
+                  items: {
+                    type: "OBJECT",
+                    properties: {
+                      question: { type: "STRING" },
+                      options: { type: "ARRAY", items: { type: "STRING" } },
+                      correctAnswer: { type: "INTEGER" }
+                    },
+                    required: ["question", "options", "correctAnswer"]
+                  }
+                }
+              },
+              required: ["id", "title", "description", "beginner", "intermediate", "advanced", "quiz"]
+            }
+          }
+        }
       });
       
       const text = result.text || "[]";
