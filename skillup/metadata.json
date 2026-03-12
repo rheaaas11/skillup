@@ -1,5 +1,0 @@
-{
-  "name": "SkillUp",
-  "description": "Upload or record a video of yourself performing a skill and get instant expert feedback from Gemini AI.",
-  "requestFramePermissions": ["camera", "microphone"]
-}
