@@ -42,6 +42,63 @@ Provide ONLY a valid JSON object. No markdown, no extra text.`;
       }],
       config: {
         responseMimeType: "application/json",
+        responseSchema: {
+          type: "OBJECT",
+          properties: {
+            score: { type: "INTEGER" },
+            strengths: { type: "ARRAY", items: { type: "STRING" } },
+            weaknesses: { type: "ARRAY", items: { type: "STRING" } },
+            improvement_plan: { type: "ARRAY", items: { type: "STRING" } },
+            recommended_resources: { 
+              type: "ARRAY", 
+              items: { 
+                type: "OBJECT", 
+                properties: { 
+                  title: { type: "STRING" }, 
+                  search_query: { type: "STRING" } 
+                },
+                required: ["title", "search_query"]
+              } 
+            },
+            timeline: { 
+              type: "ARRAY", 
+              items: { 
+                type: "OBJECT", 
+                properties: { 
+                  time: { type: "STRING" }, 
+                  type: { type: "STRING", enum: ["mistake", "warning", "good"] }, 
+                  description: { type: "STRING" } 
+                },
+                required: ["time", "type", "description"]
+              } 
+            },
+            drills: { 
+              type: "ARRAY", 
+              items: { 
+                type: "OBJECT", 
+                properties: { 
+                  title: { type: "STRING" }, 
+                  description: { type: "STRING" }, 
+                  link: { type: "STRING" } 
+                },
+                required: ["title", "description", "link"]
+              } 
+            },
+            expert_feedback: { type: "STRING" },
+            skill_library: { 
+              type: "ARRAY", 
+              items: { 
+                type: "OBJECT", 
+                properties: { 
+                  title: { type: "STRING" }, 
+                  content: { type: "STRING" } 
+                },
+                required: ["title", "content"]
+              } 
+            }
+          },
+          required: ["score", "strengths", "weaknesses", "improvement_plan", "timeline", "drills", "expert_feedback", "skill_library"]
+        }
       }
     });
 
